@@ -4,7 +4,7 @@ import javax.swing.WindowConstants;
 public class run{
     public static void main(String[] args) {
         JFrame frame = new JFrame();
-        Cube c = new Cube(100); 
+        Cube c = new Cube(40); 
         frame.add(c);
         frame.setSize(600, 600);
         frame.setLocationRelativeTo(null);
