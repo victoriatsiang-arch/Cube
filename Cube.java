@@ -37,9 +37,9 @@ public class Cube extends JPanel{
     public void generateRealPoints(){ 
         //starts with a "1" and then adds in 0s 
         for(int i = 1; i <= 8; i++){
-            int x = (i < 5) ? r : -r; 
-            int y = (i%4 == 1 || i%4 == 2) ? r : -r; 
-            int z = (i%2 == 0) ? r : -r; 
+            int x = (i < 5) ? -r : r; 
+            int y = (i%4 == 1 || i%4 == 2) ? -r : r; 
+            int z = (i%2 == 0) ? -r : r; 
             //minus 1 bc we go to index 8 
             real_points[i-1] = new Point3D(x,y,z); 
             //System.out.println(x + ", " + y + ", " + z); 
