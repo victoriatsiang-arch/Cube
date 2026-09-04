@@ -2,13 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
+//import java.awt.geom.Point2D;
 
 public class Cube extends JPanel{
     int r;
     double c_squared; 
     Point3D cube; Point3D screen; Point3D eye; 
-    Point3D[] perfect_real_points = new Point3D[8];
+    static Point3D[] perfect_real_points = new Point3D[8];
     Point3D[] real_points = new Point3D[8]; // one; Point two; Point three; Point four; 
     Point[] screen_points= new Point[8];
     Timer timer; int seconds = 0; 
@@ -24,18 +24,20 @@ public class Cube extends JPanel{
 
         generatePerfectRealPoints(); 
         
-        for(int i =0; i < 7; i++){
-            //goes from 1 to 7 inclusive 
-            connectionsList[i] = createConnectionList(i+1); 
-            for(int j = 0; j < 3; j++){
-                //System.out.print(connectionsList[i][j] + " ");
-            }
-            //System.out.println();
-        }
+        populate(connectionsList);
+        createConnectionsList(8); 
 
         timer = new Timer(30, new TimerListener());
         timer.start();
     } 
+
+    public void populate(int[][] array){
+        for(int i =0; i < array.length; i++){
+            for(int j = 0; j< array[i].length; j++){
+                array[i][j] = -1; 
+            }
+        }
+    }
 
     // this is where i want to do the binary shift 
     public void generatePerfectRealPoints(){ 
@@ -46,12 +48,12 @@ public class Cube extends JPanel{
             //i have to add a z value because my cube is no
             //longer at position (0,0,0) its at 
             // (0,0,z)
-            int z = (i%2 == 0) ? -(cube.z +r) : (cube.z+r); 
+            int z = (i%2 == 1) ? -(cube.z +r) : (cube.z+r); 
 
             //minus 1 bc we go to index 8 
             real_points[i-1] = new Point3D(x,y,z); 
             perfect_real_points[i-1] = new Point3D(x, y, z); 
-            //System.out.println(x + ", " + y + ", " + z); 
+            System.out.println(x + ", " + y + ", " + z); 
         }
     }
     
@@ -82,12 +84,12 @@ public class Cube extends JPanel{
             real_points[i].x = (int) (perfect_real_points[i].z*Math.sin(radians)
                 + perfect_real_points[i].x*Math.cos(radians)); 
 
-            System.out.println("x:" + real_points[i].x +
-                " z:" + real_points[i].z 
-            ); 
+            // System.out.println("x:" + real_points[i].x +
+            //     " z:" + real_points[i].z 
+            // ); 
         }
 
-        System.out.println(); 
+        //System.out.println(); 
 
         //this then converts points to 2d and then displays
         transform(); 
@@ -105,23 +107,25 @@ public class Cube extends JPanel{
         }
         repaint(); 
     }
- 
 
-     private int[] createConnectionList(int decimal){
-        int[] list = {-1,-1,-1}; 
-        String binary = Integer.toBinaryString(decimal); 
-        int counter = 0; 
-        for(int i = 0; i < binary.length(); i++){
-            if(binary.charAt(i) == '1'){
-                String newBinary = binary.substring(0, i) + "0"
-                    + binary.substring(i+1, binary.length()); 
-
-                //System.out.println("binary:" + binary + " newBinary:" + newBinary);
-                list[counter] = Integer.parseInt(newBinary, 2);
-                counter++; 
+    //the x value that we pass in is 8 
+    //it doesn't matter if we start from 0 or 1 anymore 
+    private void createConnectionsList(int length){ 
+        int counter; 
+        for(int i = 0; i < length - 1; i++){
+            counter = 0; 
+            for(int j = i + 1; j < length; j++){
+                // boolean logic which searching for a difference
+                // o f 1 
+                int r = ((i ^ j) - 1) & (i^j); 
+                if (r == 0){
+                    //System.out.println("i:" + i + " j:" + j);
+                    connectionsList[i][counter] = j; 
+                    counter++;
+                }
+                
             }
         }
-        return list; 
     }
 
   
@@ -139,10 +143,10 @@ public class Cube extends JPanel{
         
         pen.setColor(Color.GREEN);
         
-        for(int i = 1; i <= 7; i++){
-            for(int j = 0; j < 3; j++){
-                if(connectionsList[i-1][j] != -1){
-                    int index = connectionsList[i-1][j];
+        for(int i = 0; i < connectionsList.length; i++){
+            for(int j = 0; j < connectionsList[i].length; j++){
+                if(connectionsList[i][j] != -1){
+                    int index = connectionsList[i][j];
                     //System.out.println("point1:" + i + " point2:" + index);
                     pen.drawLine(screen_points[i].x+offset, screen_points[i].y+offset, screen_points[index].x+offset, screen_points[index].y+offset);
                 }
