@@ -4,8 +4,9 @@ A Java project exploring the mathematics behind 3D computer graphics by simulati
 
 ## Preview
 This is a preview of the running simulation
+<video>
 https://github.com/user-attachments/assets/68628f85-0991-40ff-bf1e-d87cbed9c3eb
-
+</video>
 
 
 ## Overview
