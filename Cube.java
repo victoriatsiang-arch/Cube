@@ -50,7 +50,7 @@ public class Cube extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e) {
             seconds++; 
-            seconds %= 360;
+            //seconds %= 360;
             xz_spin();
         }
     }
@@ -62,7 +62,7 @@ public class Cube extends JPanel{
     public void xz_spin(){
         // angle in radians based off of time 
         double radians = (seconds/100.0);// % (2*Math.PI); 
-
+        System.out.println("seconds:" + seconds+ " radians:" + radians);
         for(int i = 0; i < 8; i++){
             //this is according to matrix mult 
             //z acts as x value and x acts as y value 
