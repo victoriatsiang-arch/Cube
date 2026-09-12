@@ -51,30 +51,41 @@ public class Cube extends JPanel{
         public void actionPerformed(ActionEvent e) {
             seconds++; 
             //seconds %= 360;
-            xz_spin();
+            spin(1);
         }
     }
 
-    // only spins in xz plane (doesn't touch y value)
-    //problem is there is a small lag (not continuous in rotation)
-    //rotates based off of orignal points, not off of last rotation
-    //transformation, bc otherwise the values get smaller and smaller 
-    public void xz_spin(){
+    // when plane equals 0 -> spins in the xz plane
+    // when plane equals 1 -> spins in the yz plane 
+    public void spin(int plane){
         // angle in radians based off of time 
-        double radians = (seconds/100.0);// % (2*Math.PI); 
-        System.out.println("seconds:" + seconds+ " radians:" + radians);
-        for(int i = 0; i < 8; i++){
-            //this is according to matrix mult 
-            //z acts as x value and x acts as y value 
-            real_points[i].z = (int) (perfect_real_points[i].z*Math.cos(radians)
-                - perfect_real_points[i].x*Math.sin(radians)); 
+        double radians = (seconds/100.0);
+        if(plane == 0){
+            for(int i = 0; i < 8; i++){
+                //this is according to matrix mult 
+                //z acts as x value and x acts as y value 
+                real_points[i].z = (int) (perfect_real_points[i].z*Math.cos(radians)
+                    - perfect_real_points[i].x*Math.sin(radians)); 
 
-            real_points[i].x = (int) (perfect_real_points[i].z*Math.sin(radians)
-                + perfect_real_points[i].x*Math.cos(radians)); 
-        }
+                real_points[i].x = (int) (perfect_real_points[i].z*Math.sin(radians)
+                    + perfect_real_points[i].x*Math.cos(radians)); 
+            }
+            //this then converts points to 2d and then displays
+            projectToScreen(); 
 
-        //this then converts points to 2d and then displays
-        projectToScreen(); 
+        } else {
+            for(int i = 0; i < 8; i++){
+                //this is according to matrix mult 
+                //z acts as x value and x acts as y value 
+                real_points[i].z = (int) (perfect_real_points[i].z*Math.cos(radians)
+                    - perfect_real_points[i].y*Math.sin(radians)); 
+
+                real_points[i].y = (int) (perfect_real_points[i].z*Math.sin(radians)
+                    + perfect_real_points[i].y*Math.cos(radians)); 
+            }
+            //this then converts points to 2d and then displays
+            projectToScreen(); 
+        } 
     }
 
     // this is like projectToScreen onto the screen 
@@ -97,7 +108,8 @@ public class Cube extends JPanel{
             counter = 0; 
             for(int j = i + 1; j < length; j++){
                 // boolean logic which searching for a difference
-                // o f 1 
+                // uses xor and and boolean logic operators 
+                // of 1 
                 int r = ((i ^ j) - 1) & (i^j); 
                 if (r == 0){
                     //System.out.println("i:" + i + " j:" + j);
@@ -131,7 +143,7 @@ public class Cube extends JPanel{
     }
 
     //helper function to populate a blank array 
-    // w/negative 1 values 
+    //w/negative 1 values 
     public void populate(int[][] array){
         for(int i =0; i < array.length; i++){
             for(int j = 0; j< array[i].length; j++){
